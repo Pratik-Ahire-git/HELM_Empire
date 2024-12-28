@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1 
+kind: Ingress 
+metadata: 
+  name: deploy-ingress
+  annotations:
+    kubernetes.io/change-cause: "version v1.0"
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+      paths: 
+        - path: /desing
+          pathtype: Prefix
+          backend:
+            service:
+              name: desing-srv
+              port:
+                number: 80
+        - path: /vertex 
+          pathtype: Prefix
+          backend: 
+            service:
+              name: /vertex
+              port:
+                number: 80
+

@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vertex-deploy
+  annotations:
+    kubernetes.io/change-cause: "version v1.0"
+spec:
+  minReadySeconds: 1
+  replicas: 4
+  selector:
+    matchLabels:
+      web: vertex
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        web: vertex
+        version: v1.0
+    spec:
+      containers:
+        - name: web
+          image: pratik023/webside:vertex
+          resources:
+            requests:
+              memory: 24Mi
+              cpu: 50m
+            limits:
+              memory: 100Mi
+              cpu: 200m
+          ports:
+            - containerPort: 80
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: vertex
+spec:
+  selector:
+    web: vertex
+  ports:
+    - port: 80
+      targetPort: 80 

@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: desing-deploy
+  annotations:
+    kubernetes.io/change-cause: "version v1.0"
+spec:
+  minReadySeconds: 1
+  replicas: 4
+  selector:
+    matchLabels:
+      web: desing 
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        web: desing
+        version: v1.0
+    spec:
+      containers:
+        - name: web
+          image: pratik023/webside:desing
+          resources:
+            requests:
+              memory: 24Mi
+              cpu: 50m
+            limits:
+              memory: 100Mi
+              cpu: 200m
+          ports:
+            - containerPort: 80
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: desing-srv
+spec:
+  selector:
+    web: desing
+  ports:
+    - port: 80
+      targetPort: 80 
